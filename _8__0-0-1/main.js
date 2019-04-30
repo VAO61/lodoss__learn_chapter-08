@@ -4,6 +4,7 @@ const TYPE_PROJECT_MOBILE = 'Mobile';
 const SPECIALIZATION_WEB = 'Web';
 const SPECIALIZATION_MOBILE = 'Mobile';
 const SPECIALIZATION_TEST = 'Test';
+console.log(__dirname);
 
 const IncomingData = require('./incomingdata');
 

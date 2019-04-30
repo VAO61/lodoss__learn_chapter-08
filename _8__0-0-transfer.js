@@ -51,6 +51,7 @@ class IncomingData {
 
 class Manager {
   constructor() {
+    // TODO: переписать на instanceof
     this.webDept = new Department(SPECIALIZATION_WEB); // Полиморфизм, по факту - фабрика
     this.mobileDept = new Department(SPECIALIZATION_MOBILE); // Полиморфизм, по факту - фабрика
     this.testDept = new Department(SPECIALIZATION_TEST); // Полиморфизм, по факту - фабрика
@@ -60,15 +61,16 @@ class Manager {
     // Добавление кода без изменения старого - удобная расширяемость
     this.devDoneProjects = [];
     this.devDonProjectsTransfer = [];
-    // Можно обойтись
     this.doneProjects = [];
     this.pendingProjects = []; // ожидающие принятия проекты
+    // TODO: использовать первичные и вторичные данные, и фильтр
     this.firedUnits = [];
     this.statisticHiredUnits = 0;
     this.statisticFiredUnits = 0;
   }
 
   hiredUnits(units) {
+    // TODO: не по одному, а в зависимости от кол-ва вчерашних проектов (наверное не здесь имелось в виду)
     units.forEach(function(unit) {
       if (unit.unitType == SPECIALIZATION_WEB) {
         this.webDept.addUnit(unit);
@@ -81,6 +83,8 @@ class Manager {
   }
 
   firedUnits() {
+    // TODO: отвязать и вынести. Manager должен только увольнять
+    // TODO: * объединить в один firedUnit * Это уже новый объект, объединяющий упомопянутые (?)
     let unit = this.webDept.getUnBusyUnit();
     if (unit) {
       this.webDept.firedUnit(unit);
@@ -100,7 +104,7 @@ class Manager {
   addProjects(projects) {
     this.statisticHiredUnits +=
       this.pendingProjects.length + this.devDonProjectsTransfer.length;
-    // TODO maybe
+    // TODO ...
     // найм сотрудников
     this.pendingProjects.forEach(project => {
       if (project.type === TYPE_PROJECT_WEB) {
@@ -118,6 +122,7 @@ class Manager {
     this.pendingProjects.push(...projects);
 
     // распихиваем проекты со склада по отделам мобильной и веб разработок
+    // TODO: воспользоваться сортировкой arr.sort(), методом arr.pop() и циклом while () {...}
     this.pendingProjects.forEach((project, index) => {
       if (
         project.type === TYPE_PROJECT_WEB &&
@@ -148,6 +153,7 @@ class Manager {
     this.testDept.work();
 
     // увольняем лишних сотрудников
+    // TODO: объединить в один firedUnit
     let unit = this.webDept.getUnBusyUnit();
     if (unit !== undefined) {
       this.webDept.firedUnit(this.webDept.getUnBusyUnit());
@@ -211,6 +217,7 @@ class Department {
   /**
    * Расчитывает допустимую нагрузку на отдел
    */
+  // TODO: вынести и объединить в классе Department getSafeload (?)
   getSafeLoad() {
     if (this.spec === SPECIALIZATION_MOBILE) {
       let sum = 0;
@@ -228,11 +235,8 @@ class Department {
     return 0;
   }
 
-  getDevDonProjectsTransfer() {
-    // const clone = this.doneProjects.map(function(project) {
-    //     return project
-    // })
-
+  takeDevDonProjectsTransfer() {
+    // was 'get...'
     const clone = [...this.doneProjects];
     this.doneProjects = [];
     return clone;
@@ -240,18 +244,19 @@ class Department {
 
   getUnBusyUnit() {
     const array = this.unBusyUnits
-      .filter(function(unit) {
+      .filter(unit => {
         return unit.unitUnBusy >= 3;
       })
-      .sort(function(unit1, unit2) {
+      .sort((unit1, unit2) => {
         return unit2.unitSkill - unit1.unitSkill;
       });
 
     return array.pop();
   }
 
+  // TODO: объединить в один firedUnit
   firedUnit(unit) {
-    this.unBusyUnits = this.unBusyUnits.filter(function(item) {
+    this.unBusyUnits = this.unBusyUnits.filter(item => {
       return item !== unit;
     });
   }
@@ -262,6 +267,7 @@ class Department {
       if (!unit) {
         return;
       }
+      // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Unit
       unit.project = project;
       unit.unitUnBusy = 0;
       this.units.push(unit);
@@ -287,7 +293,7 @@ class Department {
         return unit !== null;
       });
     }
-
+    // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Unit
     this.units.forEach(function(unit) {
       unit.work();
     });
@@ -296,8 +302,10 @@ class Department {
     this.unBusyUnits.forEach(unit => {
       unit.unitUnBusy++;
     });
+    // TODO _end: в зависимость от наличия проектов, объединить и перенести в класс Unit
 
     this.projects.forEach((project, index) => {
+      // TODO: переделать на filter(fuction(){})
       if (project.progress >= project.difficulty) {
         // перед тем как отдать проект тестировщикам обнулим прогресс выполнения и уменьшаем сложность до 1
         project.progress = 0;

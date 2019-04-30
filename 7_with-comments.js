@@ -288,14 +288,14 @@ class Department {
       unit.work();
     });
 
-    // всем неработавшим сотрудникам увелили простой на 1
+    // всем неработавшим сотрудникам увеличили простой на 1
     this.unBusyUnits.forEach(unit => {
       unit.unitUnBusy++;
     });
 
     this.projects.forEach((project, index) => {
       if (project.progress >= project.difficulty) {
-        // перед тем ка отдать проект тестировщикам обнулим прогресс выполнения и уменьшаем сложность до 1
+        // перед тем как отдать проект тестировщикам обнулим прогресс выполнения и уменьшаем сложность до 1
         project.progress = 0;
         project.difficulty = 1;
         this.doneProjects.push(project);
@@ -343,6 +343,6 @@ class Unit {
 }
 
 const manager = new Manager();
-const incomingData = new IncomingData(manager, 20);
+const incomingData = new IncomingData(manager, 10);
 incomingData.start();
 incomingData.statistic();
