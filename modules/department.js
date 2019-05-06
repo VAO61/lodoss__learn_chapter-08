@@ -133,24 +133,31 @@ module.exports = class Department {
     });
   }
 };
-// Подклассы:
-
-// class ParentClass {
-//   constructor() {
-//     ...
-//   }
-// }
-
-// NewClass = Object.create(ParentClass) {};
-// NewClass.prototype = new ParentClass();
-// class NewClass extends ParentClass {};
 
 class WebDept extends Department {
-  // constructor () {
-  // this. ...this;
-  // }
+  constructor(spec) {
+    super();
+    // TODO: Проверить
+    this.spec = 'Web';
+    // this.webDept = new Department(SPECIALIZATION_WEB);
+    
+  }
   // Необходимо для вызова функций, принадлежащих родителю объекта
   // super(свойства, конструктора, родителя);
+  
+  class MobileDept extends Department {
+    constructor() {
+      super();
+      // TODO: Проверить
+      this.spec = 'Mobile';
+      // this.mobileDept = new Department(SPECIALIZATION_MOBILE);
+    }
+  }
+  class TestDept extends Department {
+    constructor() {
+      super();  
+      // TODO: Проверить
+      this.spec = 'Test';
+        // this.testDept = new Department(SPECIALIZATION_TEST);
+    }
 }
-class MobileDept extends Department {}
-class TestDept extends Department {}

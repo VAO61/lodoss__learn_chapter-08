@@ -1,13 +1,5 @@
 module.exports = class Manager {
   constructor() {
-    // TODO: переписать на instanceof
-    this.webDept = new Department(SPECIALIZATION_WEB); // Полиморфизм, по факту - фабрика
-    this.mobileDept = new Department(SPECIALIZATION_MOBILE); // Полиморфизм, по факту - фабрика
-    this.testDept = new Department(SPECIALIZATION_TEST); // Полиморфизм, по факту - фабрика
-    // От конкретной сущности Department, но не от метода фабрики
-    // const webDept = Department.createWebDept ();
-    // После описания класса Department
-    // Добавление кода без изменения старого - удобная расширяемость
     this.devDoneProjects = [];
     this.devDonProjectsTransfer = [];
     this.doneProjects = [];
