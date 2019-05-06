@@ -44,8 +44,12 @@ class IncomingData {
   statistic() {
     console.log('Статистика:');
     console.log(`Выполненных проектов: ${this.manager.doneProjects.length}`);
-    console.log(`Нанятых сотрудников: ${this.manager.statisticHiredUnits}`);
-    console.log(`Уволенных сотрудников: ${this.manager.statisticFiredUnits}`);
+    console.log(
+      `Нанятых сотрудников: ${this.manager.statisticHiredDevelopers}`
+    );
+    console.log(
+      `Уволенных сотрудников: ${this.manager.statisticFiredDevelopers}`
+    );
   }
 }
 
@@ -64,57 +68,58 @@ class Manager {
     this.doneProjects = [];
     this.pendingProjects = []; // ожидающие принятия проекты
     // TODO: использовать первичные и вторичные данные, и фильтр
-    this.firedUnits = [];
-    this.statisticFiredUnits = 0;
+    this.firedDevelopers = [];
+    this.statisticHiredDevelopers = 0;
+    this.statisticFiredDevelopers = 0;
   }
 
-  hiredUnits(units) {
+  hiredDevelopers(developers) {
     // TODO: не по одному, а в зависимости от кол-ва вчерашних проектов (наверное не здесь имелось в виду)
-    units.forEach(function(unit) {
-      if (unit.unitType == SPECIALIZATION_WEB) {
-        this.webDept.addUnit(unit);
-      } else if (unit.unitType == SPECIALIZATION_MOBILE) {
-        this.mobileDept.addUnit(unit);
-      } else if (unit.unitType == SPECIALIZATION_TEST) {
-        this.testDept.addUnit(unit);
+    developers.forEach(function(developer) {
+      if (developer.developerType == SPECIALIZATION_WEB) {
+        this.webDept.addDeveloper(developer);
+      } else if (developer.developerType == SPECIALIZATION_MOBILE) {
+        this.mobileDept.addDeveloper(developer);
+      } else if (developer.developerType == SPECIALIZATION_TEST) {
+        this.testDept.addDeveloper(developer);
       }
     });
   }
 
-  firedUnits() {
+  firedDevelopers() {
     // TODO: отвязать и вынести. Manager должен только увольнять
-    // TODO: * объединить в один firedUnit * Это уже новый объект, объединяющий упомопянутые (?)
-    let unit = this.webDept.getUnBusyUnit();
-    if (unit) {
-      this.webDept.firedUnit(unit);
+    // TODO: * объединить в один firedDeveloper * Это уже новый объект, объединяющий упомопянутые (?)
+    let developer = this.webDept.getUnBusyDeveloper();
+    if (developer) {
+      this.webDept.firedDeveloper(developer);
     }
 
-    unit = this.mobileDept.getUnBusyUnit();
-    if (unit) {
-      this.mobileDept.firedUnit(unit);
+    developer = this.mobileDept.getUnBusyDeveloper();
+    if (developer) {
+      this.mobileDept.firedDeveloper(developer);
     }
 
-    unit = this.testDept.getUnBusyUnit();
-    if (unit) {
-      this.testDept.firedUnit(unit);
+    developer = this.testDept.getUnBusyDeveloper();
+    if (developer) {
+      this.testDept.firedDeveloper(developer);
     }
   }
 
   addProjects(projects) {
-    this.statisticHiredUnits +=
+    this.statisticHiredDevelopers +=
       this.pendingProjects.length + this.devDonProjectsTransfer.length;
     // TODO ...
     // найм сотрудников
     this.pendingProjects.forEach(project => {
       if (project.type === TYPE_PROJECT_WEB) {
-        this.webDept.addUnit(new Unit(SPECIALIZATION_WEB));
+        this.webDept.addDeveloper(new Developer(SPECIALIZATION_WEB));
       } else if (project.type === TYPE_PROJECT_MOBILE) {
-        this.mobileDept.addUnit(new Unit(SPECIALIZATION_MOBILE));
+        this.mobileDept.addDeveloper(new Developer(SPECIALIZATION_MOBILE));
       }
     });
 
     this.devDonProjectsTransfer.forEach(() => {
-      this.testDept.addUnit(new Unit(SPECIALIZATION_TEST));
+      this.testDept.addDeveloper(new Developer(SPECIALIZATION_TEST));
     });
 
     // добавление проектов от заказчика в массив невыполненных проектов у директора (склад проектов директора)
@@ -152,23 +157,23 @@ class Manager {
     this.testDept.work();
 
     // увольняем лишних сотрудников
-    // TODO: объединить в один firedUnit
-    let unit = this.webDept.getUnBusyUnit();
-    if (unit !== undefined) {
-      this.webDept.firedUnit(this.webDept.getUnBusyUnit());
-      this.statisticFiredUnits++;
+    // TODO: объединить в один firedDeveloper
+    let developer = this.webDept.getUnBusyDeveloper();
+    if (developer !== undefined) {
+      this.webDept.firedDeveloper(this.webDept.getUnBusyDeveloper());
+      this.statisticFiredDevelopers++;
     }
 
-    unit = this.mobileDept.getUnBusyUnit();
-    if (unit !== undefined) {
-      this.mobileDept.firedUnit(this.mobileDept.getUnBusyUnit());
-      this.statisticFiredUnits++;
+    developer = this.mobileDept.getUnBusyDeveloper();
+    if (developer !== undefined) {
+      this.mobileDept.firedDeveloper(this.mobileDept.getUnBusyDeveloper());
+      this.statisticFiredDevelopers++;
     }
 
-    unit = this.testDept.getUnBusyUnit();
-    if (unit !== undefined) {
-      this.testDept.firedUnit(this.testDept.getUnBusyUnit());
-      this.statisticFiredUnits++;
+    developer = this.testDept.getUnBusyDeveloper();
+    if (developer !== undefined) {
+      this.testDept.firedDeveloper(this.testDept.getUnBusyDeveloper());
+      this.statisticFiredDevelopers++;
     }
   }
 
@@ -200,13 +205,13 @@ class Department {
   constructor(spec) {
     this.spec = spec;
     this.projects = [];
-    this.units = [];
-    this.unBusyUnits = [];
+    this.developers = [];
+    this.unBusyDevelopers = [];
     this.doneProjects = [];
   }
 
-  addUnit(unit) {
-    this.unBusyUnits.push(unit);
+  addDeveloper(developer) {
+    this.unBusyDevelopers.push(developer);
   }
 
   addProjects(projects) {
@@ -223,12 +228,12 @@ class Department {
       for (let i = 0; i < this.projects.length; i++) {
         sum += this.projects[i].difficulty;
       }
-      return this.unBusyUnits.length - sum;
+      return this.unBusyDevelopers.length - sum;
     } else if (
       this.spec === SPECIALIZATION_WEB ||
       this.spec === SPECIALIZATION_TEST
     ) {
-      return this.unBusyUnits.length - this.projects.length;
+      return this.unBusyDevelopers.length - this.projects.length;
     }
 
     return 0;
@@ -241,67 +246,67 @@ class Department {
     return clone;
   }
 
-  getUnBusyUnit() {
-    const array = this.unBusyUnits
-      .filter(unit => {
-        return unit.unitUnBusy >= 3;
+  getUnBusyDeveloper() {
+    const array = this.unBusyDevelopers
+      .filter(developer => {
+        return developer.developerUnBusy >= 3;
       })
-      .sort((unit1, unit2) => {
-        return unit2.unitSkill - unit1.unitSkill;
+      .sort((developer1, developer2) => {
+        return developer2.developerSkill - developer1.developerSkill;
       });
 
     return array.pop();
   }
 
-  // TODO: объединить в один firedUnit
-  firedUnit(unit) {
-    this.unBusyUnits = this.unBusyUnits.filter(item => {
-      return item !== unit;
+  // TODO: объединить в один firedDeveloper
+  firedDeveloper(developer) {
+    this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
+      return item !== developer;
     });
   }
 
   work() {
     this.projects.forEach(project => {
-      const unit = this.unBusyUnits.pop();
-      if (!unit) {
+      const developer = this.unBusyDevelopers.pop();
+      if (!developer) {
         return;
       }
-      // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Unit
-      unit.project = project;
-      unit.unitUnBusy = 0;
-      this.units.push(unit);
+      // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Developer
+      developer.project = project;
+      developer.developerUnBusy = 0;
+      this.developers.push(developer);
     });
 
     if (this.spec === SPECIALIZATION_MOBILE) {
-      this.unBusyUnits.forEach((unit, index) => {
+      this.unBusyDevelopers.forEach((developer, index) => {
         this.projects.forEach(project => {
-          const count = this.units.filter(function(item) {
+          const count = this.developers.filter(function(item) {
             return item.project === project;
           }).length;
 
           if (project.difficulty > count) {
-            unit.project = project;
-            unit.unitUnBusy = 0;
-            this.units.push(unit);
-            this.unBusyUnits[index] = null;
+            developer.project = project;
+            developer.developerUnBusy = 0;
+            this.developers.push(developer);
+            this.unBusyDevelopers[index] = null;
           }
         });
       });
 
-      this.unBusyUnits = this.unBusyUnits.filter(function(unit) {
-        return unit !== null;
+      this.unBusyDevelopers = this.unBusyDevelopers.filter(function(developer) {
+        return developer !== null;
       });
     }
-    // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Unit
-    this.units.forEach(function(unit) {
-      unit.work();
+    // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Developer
+    this.developers.forEach(function(developer) {
+      developer.work();
     });
 
     // всем неработавшим сотрудникам увеличили простой на 1
-    this.unBusyUnits.forEach(unit => {
-      unit.unitUnBusy++;
+    this.unBusyDevelopers.forEach(developer => {
+      developer.developerUnBusy++;
     });
-    // TODO _end: в зависимость от наличия проектов, объединить и перенести в класс Unit
+    // TODO _end: в зависимость от наличия проектов, объединить и перенести в класс Developer
 
     this.projects.forEach((project, index) => {
       // TODO: переделать на filter(fuction(){})
@@ -312,16 +317,16 @@ class Department {
         this.doneProjects.push(project);
         this.projects[index] = null;
 
-        const units = this.units.filter(unit => {
-          return unit.project === project;
+        const developers = this.developers.filter(developer => {
+          return developer.project === project;
         });
 
-        units.forEach(unit => {
-          unit.unitSkill++;
-          this.units = this.units.filter(item => {
-            return item !== unit;
+        developers.forEach(developer => {
+          developer.developerSkill++;
+          this.developers = this.developers.filter(item => {
+            return item !== developer;
           });
-          this.unBusyUnits.push(unit);
+          this.unBusyDevelopers.push(developer);
         });
       }
     });
@@ -365,12 +370,12 @@ class WebProject extends Project {}
 class MobilProject extends Project {}
 class TestProject extends Project {}
 
-class Unit {
-  constructor(unitType) {
-    this.unitType = unitType;
-    this.unitSkill = 0;
+class Developer {
+  constructor(developerType) {
+    this.developerType = developerType;
+    this.developerSkill = 0;
     this.project = null;
-    this.unitUnBusy = 0;
+    this.developerUnBusy = 0;
   }
 
   work() {
@@ -378,9 +383,9 @@ class Unit {
   }
 }
 
-class WebUnit extends Unit {}
-class MobileUnit extends Unit {}
-class TestUnit extends Unit {}
+class WebDeveloper extends Developer {}
+class MobileDeveloper extends Developer {}
+class TestDeveloper extends Developer {}
 
 const manager = new Manager();
 const incomingData = new IncomingData(manager, 20);
