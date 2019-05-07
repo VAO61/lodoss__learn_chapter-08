@@ -82,18 +82,16 @@ class Manager {
     });
   }
 
-  getPendingProjects(projects) {
+  generatePendingProjects(projects) {
     // добавление проектов от заказчика в массив невыполненных проектов у директора (склад проектов директора)
     this.pendingProjects.push(...projects);
   }
 
-  getStatisticHiredDevelopers() {
+  generateStatisticHiredDevelopers() {
     this.statisticHiredDevelopers += this.pendingProjects.length + this.devDonProjectsTransfer.length;
   }
 
   addProjects() {
-    
-
     // распихиваем проекты со склада по отделам мобильной и веб разработок
     // TODO: воспользоваться сортировкой arr.sort(), методом arr.pop() и циклом while () {...}
     while (/*pendingProjects.length > 0*/) { // не точно, пока не останется свободных рук
@@ -120,7 +118,7 @@ class Manager {
       return project !== null;
     });
 
-    // забираем готовые проекты у отделов веб и мобильной разработки и передаем их тестировщикам
+    // забираем готовые проекты у отделов веб и мобильной разработки, и передаем их тестировщикам
     this.transferToTestDeptProjects();
 
     // приказ работать всем отделам
@@ -128,6 +126,30 @@ class Manager {
     this.mobileDept.work();
     this.testDept.work();
   }
+
+  transferToTestDeptProjects() {
+    this.devDonProjectsTransfer.push(
+      ...this.webDept.getDevDonProjectsTransfer(),
+      ...this.mobileDept.getDevDonProjectsTransfer()
+    );
+
+    this.testDept.addProjects(this.devDonProjectsTransfer);
+    this.devDonProjectsTransfer.forEach((project, index) => {
+      if (this.testDept.getSafeLoad() > 0) {
+        this.testDept.addProjects([project]);
+        this.devDonProjectsTransfer[index] = null;
+      }
+    });
+
+    this.devDonProjectsTransfer = this.devDonProjectsTransfer.filter(function(
+      project
+    ) {
+      return project !== null;
+    });
+
+    this.doneProjects.push(...this.testDept.getDevDonProjectsTransfer());
+  }
+
 }
 
 class Department {
