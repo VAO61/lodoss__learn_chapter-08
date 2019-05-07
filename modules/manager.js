@@ -1,5 +1,8 @@
 module.exports = class Manager {
   constructor() {
+    this.webDept = new Department(SPECIALIZATION_WEB); // Полиморфизм, по факту - фабрика
+    this.mobileDept = new Department(SPECIALIZATION_MOBILE); // Полиморфизм, по факту - фабрика
+    this.testDept = new Department(SPECIALIZATION_TEST); // Полиморфизм, по факту - фабрика
     this.devDoneProjects = [];
     this.devDonProjectsTransfer = [];
     this.doneProjects = [];
@@ -55,7 +58,12 @@ module.exports = class Manager {
     // добавление проектов от заказчика в массив невыполненных проектов у директора (склад проектов директора)
     this.pendingProjects.push(...projects);
     // распихиваем проекты со склада по отделам мобильной и веб разработок
+
     // TODO: воспользоваться сортировкой arr.sort(), методом arr.pop() и циклом while () {...}
+    while (pendingProjects.length > 0) {
+      this.pendingProjects.sort(project => {});
+    }
+
     this.pendingProjects.forEach((project, index) => {
       if (
         project.type === TYPE_PROJECT_WEB &&
@@ -71,6 +79,8 @@ module.exports = class Manager {
         this.pendingProjects[index] = null;
       }
     });
+    // TODO: воспользоваться сортировкой arr.sort(), методом arr.pop() и циклом while () {...}
+
     // наводим порядок на складе
     this.pendingProjects = this.pendingProjects.filter(function(project) {
       return project !== null;

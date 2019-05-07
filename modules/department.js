@@ -135,10 +135,10 @@ module.exports = class Department {
 };
 
 class WebDept extends Department {
-  constructor(spec) {
+  constructor() {
     super();
     // TODO: Проверить
-    this.spec = 'Web';
+    // this.spec = 'Web';
     // this.webDept = new Department(SPECIALIZATION_WEB);
     
   }
@@ -149,7 +149,7 @@ class WebDept extends Department {
     constructor() {
       super();
       // TODO: Проверить
-      this.spec = 'Mobile';
+      // this.spec = 'Mobile';
       // this.mobileDept = new Department(SPECIALIZATION_MOBILE);
     }
   }
@@ -157,7 +157,7 @@ class WebDept extends Department {
     constructor() {
       super();  
       // TODO: Проверить
-      this.spec = 'Test';
+      // this.spec = 'Test';
         // this.testDept = new Department(SPECIALIZATION_TEST);
     }
 }
