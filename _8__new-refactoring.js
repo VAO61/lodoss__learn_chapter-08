@@ -18,24 +18,24 @@ class IncomingData {
     }
     return projects;
   }
-  // transferProjects() {
-  //   this.manager.addProjects(this.generateProjects());
-  // }
-  // start() {
-  //   for (let i = 0; i < this.days; i++) {
-  //     this.transferProjects();
-  //   }
-  // }
-  // statistic() {
-  //   console.log('Статистика:');
-  //   console.log(`Выполненных проектов: ${this.manager.doneProjects.length}`);
-  //   console.log(
-  //     `Нанятых сотрудников: ${this.manager.statisticHiredDevelopers}`
-  //   );
-  //   console.log(
-  //     `Уволенных сотрудников: ${this.manager.statisticFiredDevelopers}`
-  //   );
-  // }
+  transferProjects() {
+    this.manager.addProjects(this.generateProjects());
+  }
+  start() {
+    for (let i = 0; i < this.days; i++) {
+      this.transferProjects();
+    }
+  }
+  statistic() {
+    console.log('Статистика:');
+    console.log(`Выполненных проектов: ${this.manager.doneProjects.length}`);
+    console.log(
+      `Нанятых сотрудников: ${this.manager.statisticHiredDevelopers}`
+    );
+    console.log(
+      `Уволенных сотрудников: ${this.manager.statisticFiredDevelopers}`
+    );
+  }
 }
 
 class Manager {
@@ -43,13 +43,10 @@ class Manager {
     this.webDept = new WebDept();
     this.mobileDept = new MobileDept();
     this.testDept = new TestDept();
-    // this.webDeveloper = new WebDeveloper();
-    // this.mobileDeveloper = new MobileDeveloper();
-    // this.testDeveloper = new TestDeveloper();
-    // this.devDoneProjects = [];
-    // this.devDonProjectsTransfer = [];
-    // this.doneProjects = [];
     this.pendingProjects = []; // ожидающие принятия проекты
+    this.devDoneProjects = [];
+    this.devDonProjectsTransfer = [];
+    this.doneProjects = [];
     // // TODO: использовать первичные и вторичные данные, и фильтр
     // this.firedDevelopers = [];
     this.statisticHiredDevelopers = 0;
@@ -92,31 +89,31 @@ class Manager {
   }
 
   addProjects() {
+    const arr = this.pendingProjects.sort((a, b) => a.difficulty - b.difficulty);
     // распихиваем проекты со склада по отделам мобильной и веб разработок
-    // TODO: воспользоваться сортировкой arr.sort(), методом arr.pop() и циклом while () {...}
-    while (/*pendingProjects.length > 0*/) { // не точно, пока не останется свободных рук
-      // можно перенести в Department и просуммировать допустимую нагрузку
+    while (arr.length > 0) {
+      const project = arr.pop();
+      // забираем проекты из отсортированного массива по одному
+
       this.pendingProjects.forEach((project) => {
         if (
           project instanceof WebProject &&
           project.difficulty <= this.webDept.getSafeLoad()
         ) {
           // this.webDept.addProjects([project]);
-          // this.pendingProjects[index] = null;
         } else if (
           project instanceof MobileProject &&
           project.difficulty <= this.mobileDept.getSafeLoad()
         ) {
           // this.mobileDept.addProjects([project]);
-          // this.pendingProjects[index] = null;
         }
       });
     });
 
     // наводим порядок на складе
-    this.pendingProjects = this.pendingProjects.filter((project) => {
-      return project !== null;
-    });
+    // this.pendingProjects = this.pendingProjects.filter((project) => {
+    //   return project !== null;
+    // });
 
     // забираем готовые проекты у отделов веб и мобильной разработки, и передаем их тестировщикам
     this.transferToTestDeptProjects();
@@ -155,6 +152,7 @@ class Manager {
 class Department {
   constructor(spec) {
     this.spec = spec;
+    // TODO: врядли теперь нужно описание свойства специализации
     this.projects = [];
     this.developers = [];
     this.unBusyDevelopers = [];
@@ -195,6 +193,124 @@ class Department {
 
   addProjects(projects) {
     this.projects.push(...projects);
+  }
+
+  /**
+   * Расчитывает допустимую нагрузку на отдел
+   */
+  // TODO: вынести и объединить в классе Department getSafeload (?)
+  getSafeLoad(department) {
+    // TODO[important]: ПРОВЕРИТЬ!
+    if (department instanceof MobileDept) {
+      let sum = 0;
+      for (let i = 0; i < this.projects.length; i++) {
+        sum += this.projects[i].difficulty;
+      }
+      return this.unBusyDevelopers.length - sum;
+    } else if (
+      department instanceof WebDept ||
+      department instanceof TestDept
+    ) {
+      return this.unBusyDevelopers.length - this.projects.length;
+    }
+
+    return 0;
+  }
+
+  takeDevDonProjectsTransfer() {
+    const clone = [...this.doneProjects];
+    this.doneProjects = [];
+    return clone;
+  }
+
+  getUnBusyDeveloper() {
+    const array = this.unBusyDevelopers
+      .filter(developer => {
+        return developer.developerUnBusy >= 3;
+      })
+      .sort((developer1, developer2) => {
+        return developer2.developerSkill - developer1.developerSkill;
+      });
+
+    return array.pop();
+  }
+
+  // TODO: объединить в один firedDeveloper
+  firedDeveloper(developer) {
+    this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
+      return item !== developer;
+    });
+  }
+
+  work() {
+    this.projects.forEach(project => {
+      const developer = this.unBusyDevelopers.pop();
+      if (!developer) {
+        return;
+      }
+      // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Developer
+      developer.project = project;
+      developer.developerUnBusy = 0;
+      this.developers.push(developer);
+    });
+
+    if (this.spec === SPECIALIZATION_MOBILE) {
+      this.unBusyDevelopers.forEach((developer, index) => {
+        this.projects.forEach(project => {
+          const count = this.developers.filter(function(item) {
+            return item.project === project;
+          }).length;
+
+          if (project.difficulty > count) {
+            developer.project = project;
+            developer.developerUnBusy = 0;
+            this.developers.push(developer);
+            this.unBusyDevelopers[index] = null;
+          }
+        });
+      });
+
+      this.unBusyDevelopers = this.unBusyDevelopers.filter(function(developer) {
+        return developer !== null;
+      });
+    }
+    // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Developer
+    this.developers.forEach(function(developer) {
+      developer.work();
+    });
+
+    // всем неработавшим сотрудникам увеличили простой на 1
+    this.unBusyDevelopers.forEach(developer => {
+      developer.developerUnBusy++;
+    });
+    // TODO _end: в зависимость от наличия проектов, объединить и перенести в класс Developer
+
+    this.projects.forEach((project, index) => {
+      // TODO: переделать на filter(fuction(){})
+      if (project.progress >= project.difficulty) {
+        // перед тем как отдать проект тестировщикам обнулим прогресс выполнения и уменьшаем сложность до 1
+        project.progress = 0;
+        project.difficulty = 1;
+        this.doneProjects.push(project);
+        this.projects[index] = null;
+
+        const developers = this.developers.filter(developer => {
+          return developer.project === project;
+        });
+
+        developers.forEach(developer => {
+          developer.developerSkill++;
+          this.developers = this.developers.filter(item => {
+            return item !== developer;
+          });
+          this.unBusyDevelopers.push(developer);
+        });
+      }
+    });
+
+    this.projects = this.projects.filter(function(project) {
+      return project !== null;
+    });
   }
 }
 
@@ -248,6 +364,9 @@ class Developer {
     this.skill = 0;
     this.project = null;
     this.unBusyCount = 0;
+    // this.webDeveloper = new WebDeveloper();
+    // this.mobileDeveloper = new MobileDeveloper();
+    // this.testDeveloper = new TestDept();
   }
 
   // work() {
