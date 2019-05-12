@@ -1,4 +1,7 @@
-module.exports = class IncomingData {
+const WebProject = require('./projects/WebProject.js');
+const MobileProject = require('./projects/MobileProject.js');
+
+class IncomingData {
   constructor(manager, days) {
     this.manager = manager;
     this.days = days;
@@ -11,10 +14,10 @@ module.exports = class IncomingData {
     const webProjects = this.getRandom(0, countProjects);
     const projects = [];
     for (let i = 0; i < webProjects; i++) {
-      projects.push(new Project(TYPE_PROJECT_WEB, this.getRandom(1, 3)));
+      projects.push(new WebProject(this.getRandom(1, 3)));
     }
     for (let i = 0; i < countProjects - webProjects; i++) {
-      projects.push(new Project(TYPE_PROJECT_MOBILE, this.getRandom(1, 3)));
+      projects.push(new MobileProject(this.getRandom(1, 3)));
     }
     return projects;
   }
@@ -36,4 +39,6 @@ module.exports = class IncomingData {
       `Уволенных сотрудников: ${this.manager.statisticFiredDevelopers}`
     );
   }
-};
+}
+
+module.exports = IncomingData;

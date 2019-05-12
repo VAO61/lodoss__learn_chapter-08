@@ -1,10 +1,38 @@
-module.exports = class Department {
-  constructor(spec) {
-    this.spec = spec;
+class Department {
+  constructor() {
+    // TODO: врядли теперь нужно описание свойства специализации
     this.projects = [];
     this.developers = [];
     this.unBusyDevelopers = [];
     this.doneProjects = [];
+  }
+
+  firedDevelopers() {
+    let developer = this.getUnBusyDeveloper();
+    if (developer !== undefined) {
+      this.firedDeveloper(developer);
+      this.statisticFiredDevelopers++;
+    }
+
+    // увольняем лишних сотрудников
+    // TODO: объединить в один firedDeveloper
+    // let developer = this.webDept.getUnBusyDeveloper();
+    // if (developer !== undefined) {
+    //   this.webDept.firedDeveloper(this.webDept.getUnBusyDeveloper());
+    //   this.statisticFiredDevelopers++;
+    // }
+
+    // developer = this.mobileDept.getUnBusyDeveloper();
+    // if (developer !== undefined) {
+    //   this.mobileDept.firedDeveloper(this.mobileDept.getUnBusyDeveloper());
+    //   this.statisticFiredDevelopers++;
+    // }
+
+    // developer = this.testDept.getUnBusyDeveloper();
+    // if (developer !== undefined) {
+    //   this.testDept.firedDeveloper(this.testDept.getUnBusyDeveloper());
+    //   this.statisticFiredDevelopers++;
+    // }
   }
 
   addDeveloper(developer) {
@@ -19,16 +47,17 @@ module.exports = class Department {
    * Расчитывает допустимую нагрузку на отдел
    */
   // TODO: вынести и объединить в классе Department getSafeload (?)
-  getSafeLoad() {
-    if (this.spec === SPECIALIZATION_MOBILE) {
+  getSafeLoad(department) {
+    // TODO[important]: ПРОВЕРИТЬ!
+    if (department instanceof MobileDept) {
       let sum = 0;
       for (let i = 0; i < this.projects.length; i++) {
         sum += this.projects[i].difficulty;
       }
       return this.unBusyDevelopers.length - sum;
     } else if (
-      this.spec === SPECIALIZATION_WEB ||
-      this.spec === SPECIALIZATION_TEST
+      department instanceof WebDept ||
+      department instanceof TestDept
     ) {
       return this.unBusyDevelopers.length - this.projects.length;
     }
@@ -37,7 +66,6 @@ module.exports = class Department {
   }
 
   takeDevDonProjectsTransfer() {
-    // was 'get...'
     const clone = [...this.doneProjects];
     this.doneProjects = [];
     return clone;
@@ -74,26 +102,6 @@ module.exports = class Department {
       this.developers.push(developer);
     });
 
-    if (this.spec === SPECIALIZATION_MOBILE) {
-      this.unBusyDevelopers.forEach((developer, index) => {
-        this.projects.forEach(project => {
-          const count = this.developers.filter(function(item) {
-            return item.project === project;
-          }).length;
-
-          if (project.difficulty > count) {
-            developer.project = project;
-            developer.developerUnBusy = 0;
-            this.developers.push(developer);
-            this.unBusyDevelopers[index] = null;
-          }
-        });
-      });
-
-      this.unBusyDevelopers = this.unBusyDevelopers.filter(function(developer) {
-        return developer !== null;
-      });
-    }
     // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Developer
     this.developers.forEach(function(developer) {
       developer.work();
@@ -132,32 +140,6 @@ module.exports = class Department {
       return project !== null;
     });
   }
-};
-
-class WebDept extends Department {
-  constructor() {
-    super();
-    // TODO: Проверить
-    // this.spec = 'Web';
-    // this.webDept = new Department(SPECIALIZATION_WEB);
-    
-  }
-  // Необходимо для вызова функций, принадлежащих родителю объекта
-  // super(свойства, конструктора, родителя);
-  
-  class MobileDept extends Department {
-    constructor() {
-      super();
-      // TODO: Проверить
-      // this.spec = 'Mobile';
-      // this.mobileDept = new Department(SPECIALIZATION_MOBILE);
-    }
-  }
-  class TestDept extends Department {
-    constructor() {
-      super();  
-      // TODO: Проверить
-      // this.spec = 'Test';
-        // this.testDept = new Department(SPECIALIZATION_TEST);
-    }
 }
+
+module.exports = Department;
