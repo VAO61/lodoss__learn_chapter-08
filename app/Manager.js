@@ -22,32 +22,21 @@ class Manager {
     // TODO: использовать первичные и вторичные данные, и фильтр
     // this.firedDevelopers = [];
     this.statisticHiredDevelopers = 0;
-    // this.statisticFiredDevelopers = 0;
+    this.statisticFiredDevelopers = 0;
   }
 
-  hiredDevelopers(developers) {
-    // TODO: пофиксить зависимость с hiredDevelopers и необходимым кол-вом
-    // найм сотрудников
+  hiredDevelopers() {
+    // Найм сотрудников. Минимум один разработчик на один проект
     this.pendingProjects.forEach(project => {
       if (project instanceof WebProject) {
-        this.webDept.addDeveloper(new WebDeveloper());
+        this.webDept.unBusyDevelopers.push(new WebDeveloper());
       } else if (project instanceof MobileProject) {
-        this.mobileDept.addDeveloper(new MobileDeveloper());
+        this.mobileDept.unBusyDevelopers.push(new MobileDeveloper());
       }
-    });
-    this.devDoneProjects.forEach(() => {
-      this.testDept.addDeveloper(new TestDeveloper());
     });
 
-    // TODO: не по одному, а в зависимости от кол-ва поступивших вчера проектов
-    developers.forEach(developer => {
-      if (developer instanceof WebDeveloper) {
-        this.webDept.addDeveloper(developer);
-      } else if (developer instanceof MobileDeveloper) {
-        this.mobileDept.addDeveloper(developer);
-      } else if (developer instanceof TestDeveloper) {
-        this.testDept.addDeveloper(developer);
-      }
+    this.devDoneProjects.forEach(() => {
+      this.testDept.unBusyDevelopers.push(new TestDeveloper());
     });
   }
 
@@ -62,61 +51,77 @@ class Manager {
   }
 
   addProjects() {
-    const arr = this.pendingProjects.sort(
-      (a, b) => a.difficulty - b.difficulty
-    );
+    // Выполняется функция найма сотрудников
+    this.hiredDevelopers();
+
+    // Без временного массива не обойтись для решения поставленной ментором задачи (while + .sort + .pop) без потери проектов, не попавших в разработку
+    const tmp = [];
+
     // распихиваем проекты со склада по отделам мобильной и веб разработок
-    while (arr.length > 0) {
-      const project = arr.pop();
-      // забираем проекты из отсортированного массива по одному
+    this.pendingProjects.sort((a, b) => a.difficulty - b.difficulty);
 
-      this.pendingProjects.forEach(project => {
-        if (
-          project instanceof WebProject &&
-          project.difficulty <= this.webDept.getSafeLoad()
-        ) {
-          // this.webDept.addProjects([project]);
-        } else if (
-          project instanceof MobileProject &&
-          project.difficulty <= this.mobileDept.getSafeLoad()
-        ) {
-          // this.mobileDept.addProjects([project]);
-        }
-      });
+    while (this.pendingProjects.length > 0) {
+      // Забираем проекты из отсортированного массива по одному
+      const project = this.pendingProjects.pop();
+      if (
+        project instanceof WebProject &&
+        project.difficulty <= this.webDept.getSafeLoad()
+      ) {
+        this.webDept.projects.push(project);
+      } else if (
+        project instanceof MobileProject &&
+        project.difficulty <= this.mobileDept.getSafeLoad()
+      ) {
+        this.mobileDept.projects.push(project);
+      } else {
+        // Пушим во временное хранилище чтобы не потерять проект и отдать его в след. итерацию
+        tmp.push(project);
+      }
     }
-
-    // наводим порядок на складе
-    // this.pendingProjects = this.pendingProjects.filter((project) => {
-    //   return project !== null;
-    // });
+    // Обновляем массив проектов для реализации в последующий день
+    this.pendingProjects.push(...tmp);
 
     // забираем готовые проекты у отделов веб и мобильной разработки, и передаем их тестировщикам
     this.transferToTestDeptProjects();
+
+    // забирает у отдела тестирования заерщенные проекты и скадируем в список завершенных
+    this.getCompletedProjects();
 
     // приказ работать всем отделам
     this.webDept.work();
     this.mobileDept.work();
     this.testDept.work();
+
+    // приказ увольнять сотрудников
+    this.webDept.firedDevelopers();
+    this.mobileDept.firedDevelopers();
+    this.testDept.firedDevelopers();
   }
 
+  /**
+   * Забирает у отделов Web и Mobile завершенные проекты, и отдает их по возможности в отдел тестирования
+   */
   transferToTestDeptProjects() {
     this.devDoneProjects.push(
       ...this.webDept.takeDevDonProjectsTransfer(),
       ...this.mobileDept.takeDevDonProjectsTransfer()
     );
 
-    this.testDept.addProjects(this.devDoneProjects);
-    this.devDoneProjects.forEach((project, index) => {
+    const tmp = [];
+    while (this.devDoneProjects.length > 0) {
+      const project = this.devDoneProjects.pop();
+
       if (this.testDept.getSafeLoad() > 0) {
-        this.testDept.addProjects([project]);
-        this.devDoneProjects[index] = null;
+        this.testDept.projects.push(project);
+      } else {
+        tmp.push(project);
       }
-    });
+    }
+    this.devDoneProjects.push(...tmp);
+  }
 
-    this.devDoneProjects = this.devDoneProjects.filter(function(project) {
-      return project !== null;
-    });
-
+  getCompletedProjects() {
+    // забирает у отдела тестирования заерщенные проекты и скадируем в список завершенных
     this.doneProjects.push(...this.testDept.takeDevDonProjectsTransfer());
   }
 }

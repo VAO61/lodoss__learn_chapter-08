@@ -1,6 +1,6 @@
 class Department {
   constructor() {
-    // TODO: врядли теперь нужно описание свойства специализации
+    // TODO: требуется рефакторинг массивов, должно остаться два
     this.projects = [];
     this.developers = [];
     this.unBusyDevelopers = [];
@@ -10,59 +10,15 @@ class Department {
   firedDevelopers() {
     let developer = this.getUnBusyDeveloper();
     if (developer !== undefined) {
-      this.firedDeveloper(developer);
+      this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
+        return item !== developer;
+      });
       this.statisticFiredDevelopers++;
     }
-
-    // увольняем лишних сотрудников
-    // TODO: объединить в один firedDeveloper
-    // let developer = this.webDept.getUnBusyDeveloper();
-    // if (developer !== undefined) {
-    //   this.webDept.firedDeveloper(this.webDept.getUnBusyDeveloper());
-    //   this.statisticFiredDevelopers++;
-    // }
-
-    // developer = this.mobileDept.getUnBusyDeveloper();
-    // if (developer !== undefined) {
-    //   this.mobileDept.firedDeveloper(this.mobileDept.getUnBusyDeveloper());
-    //   this.statisticFiredDevelopers++;
-    // }
-
-    // developer = this.testDept.getUnBusyDeveloper();
-    // if (developer !== undefined) {
-    //   this.testDept.firedDeveloper(this.testDept.getUnBusyDeveloper());
-    //   this.statisticFiredDevelopers++;
-    // }
   }
 
-  addDeveloper(developer) {
-    this.unBusyDevelopers.push(developer);
-  }
-
-  addProjects(projects) {
-    this.projects.push(...projects);
-  }
-
-  /**
-   * Расчитывает допустимую нагрузку на отдел
-   */
-  // TODO: вынести и объединить в классе Department getSafeload (?)
-  getSafeLoad(department) {
-    // TODO[important]: ПРОВЕРИТЬ!
-    if (department instanceof MobileDept) {
-      let sum = 0;
-      for (let i = 0; i < this.projects.length; i++) {
-        sum += this.projects[i].difficulty;
-      }
-      return this.unBusyDevelopers.length - sum;
-    } else if (
-      department instanceof WebDept ||
-      department instanceof TestDept
-    ) {
-      return this.unBusyDevelopers.length - this.projects.length;
-    }
-
-    return 0;
+  getSafeLoad() {
+    return this.unBusyDevelopers.length - this.projects.length;
   }
 
   takeDevDonProjectsTransfer() {
@@ -83,62 +39,59 @@ class Department {
     return array.pop();
   }
 
-  // TODO: объединить в один firedDeveloper
-  firedDeveloper(developer) {
-    this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
-      return item !== developer;
-    });
-  }
-
   work() {
     this.projects.forEach(project => {
       const developer = this.unBusyDevelopers.pop();
+
+      // Если есть незанятые
       if (!developer) {
         return;
       }
-      // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Developer
-      developer.project = project;
-      developer.developerUnBusy = 0;
+
+      // Передаем проект разработчику
+      developer.startProject(project);
+
+      // Убираем разработчика из массива незанятых
+      this.unBusyDevelopers = this.unBusyDevelopers.filter(
+        d => d !== developer
+      );
+      // Переводим разработчика из массива незанятых в массив занятых
       this.developers.push(developer);
     });
 
-    // TODO _start: в зависимость от наличия проектов, объединить и перенести в класс Developer
     this.developers.forEach(function(developer) {
       developer.work();
     });
 
-    // всем неработавшим сотрудникам увеличили простой на 1
-    this.unBusyDevelopers.forEach(developer => {
-      developer.developerUnBusy++;
+    this.unBusyDevelopers.forEach(function(developer) {
+      developer.work();
     });
-    // TODO _end: в зависимость от наличия проектов, объединить и перенести в класс Developer
 
-    this.projects.forEach((project, index) => {
-      // TODO: переделать на filter(fuction(){})
-      if (project.progress >= project.difficulty) {
-        // перед тем как отдать проект тестировщикам обнулим прогресс выполнения и уменьшаем сложность до 1
+    this.projects
+      .filter(
+        project => project.progress >= project.difficulty
+      ) /* Массив проектов, над которыми завершена работа */
+      .forEach(project => {
         project.progress = 0;
         project.difficulty = 1;
-        this.doneProjects.push(project);
-        this.projects[index] = null;
 
-        const developers = this.developers.filter(developer => {
-          return developer.project === project;
-        });
-
+        const developers = this.developers.filter(
+          developer => developer.project === project
+        );
         developers.forEach(developer => {
-          developer.developerSkill++;
-          this.developers = this.developers.filter(item => {
-            return item !== developer;
-          });
+          // Говорим разработичку остановить работу над проектом (об`Null`яем проект и повышаем skill на 1)
+          developer.stopProject();
+          // Убираем разаработчика из массива занятых
+          this.developers = this.developers.filter(d => d !== developer);
+          // Переводим разработчика в массив незанятых
           this.unBusyDevelopers.push(developer);
         });
-      }
-    });
 
-    this.projects = this.projects.filter(function(project) {
-      return project !== null;
-    });
+        // Удаляем проект из списка проектов "в работе"
+        this.projects = this.projects.filter(p => p !== project);
+        // Добавляем проект в массив завершенных проектов отдела
+        this.doneProjects.push(project);
+      });
   }
 }
 
