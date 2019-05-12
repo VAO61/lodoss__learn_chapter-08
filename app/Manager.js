@@ -22,7 +22,6 @@ class Manager {
     // TODO: использовать первичные и вторичные данные, и фильтр
     // this.firedDevelopers = [];
     this.statisticHiredDevelopers = 0;
-    this.statisticFiredDevelopers = 0;
   }
 
   hiredDevelopers() {
@@ -38,6 +37,8 @@ class Manager {
     this.devDoneProjects.forEach(() => {
       this.testDept.unBusyDevelopers.push(new TestDeveloper());
     });
+    this.statisticHiredDevelopers +=
+      this.pendingProjects.length + this.devDoneProjects.length;
   }
 
   generatePendingProjects(projects) {
@@ -45,12 +46,9 @@ class Manager {
     this.pendingProjects.push(...projects);
   }
 
-  generateStatisticHiredDevelopers() {
-    this.statisticHiredDevelopers +=
-      this.pendingProjects.length + this.devDoneProjects.length;
-  }
+  addProjects(projects) {
+    this.pendingProjects.push(...projects);
 
-  addProjects() {
     // Выполняется функция найма сотрудников
     this.hiredDevelopers();
 

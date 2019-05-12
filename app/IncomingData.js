@@ -36,7 +36,9 @@ class IncomingData {
       `Нанятых сотрудников: ${this.manager.statisticHiredDevelopers}`
     );
     console.log(
-      `Уволенных сотрудников: ${this.manager.statisticFiredDevelopers}`
+      `Уволенных сотрудников: ${this.manager.webDept.statisticFiredDevelopers +
+        this.manager.mobileDept.statisticFiredDevelopers +
+        this.manager.testDept.statisticFiredDevelopers}`
     );
   }
 }

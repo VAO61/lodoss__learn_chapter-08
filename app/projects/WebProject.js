@@ -1,8 +1,8 @@
 const Project = require('./Project.js');
 
 class WebProject extends Project {
-  constructor() {
-    super();
+  constructor(difficulty) {
+    super(difficulty);
   }
 }
 

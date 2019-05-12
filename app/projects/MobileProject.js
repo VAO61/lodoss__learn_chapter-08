@@ -1,9 +1,9 @@
 const Project = require('./Project.js');
 
-class MobilProject extends Project {
-  constructor() {
-    super();
+class MobileProject extends Project {
+  constructor(difficulty) {
+    super(difficulty);
   }
 }
 
-module.exports = MobilProject;
+module.exports = MobileProject;

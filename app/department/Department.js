@@ -5,6 +5,7 @@ class Department {
     this.developers = [];
     this.unBusyDevelopers = [];
     this.doneProjects = [];
+    this.statisticFiredDevelopers = 0;
   }
 
   firedDevelopers() {
@@ -39,7 +40,7 @@ class Department {
     return array.pop();
   }
 
-  work() {
+  workF1() {
     this.projects.forEach(project => {
       const developer = this.unBusyDevelopers.pop();
 
@@ -58,7 +59,9 @@ class Department {
       // Переводим разработчика из массива незанятых в массив занятых
       this.developers.push(developer);
     });
+  }
 
+  workF2() {
     this.developers.forEach(function(developer) {
       developer.work();
     });
@@ -66,7 +69,9 @@ class Department {
     this.unBusyDevelopers.forEach(function(developer) {
       developer.work();
     });
+  }
 
+  workF3() {
     this.projects
       .filter(
         project => project.progress >= project.difficulty
@@ -92,6 +97,12 @@ class Department {
         // Добавляем проект в массив завершенных проектов отдела
         this.doneProjects.push(project);
       });
+  }
+
+  work() {
+    this.workF1();
+    this.workF2();
+    this.workF3();
   }
 }
 
