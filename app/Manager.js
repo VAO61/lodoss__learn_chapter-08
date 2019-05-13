@@ -48,7 +48,7 @@ class Manager {
   }
 
   addProjects(projects) {
-    this.pendingProjects.push(...projects);
+    this.generatePendingProjects(projects);
 
     // Выполняется функция найма сотрудников
     this.hiredDevelopers();

@@ -5,16 +5,13 @@ class IncomingData {
   constructor(manager, days) {
     this.manager = manager;
     this.days = days;
-    this.counter = 0;
   }
   getRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   generateProjects() {
-    // const countProjects = this.getRandom(0, 4);
-    const countProjects = 2;
-    // const webProjects = this.getRandom(0, countProjects);
-    const webProjects = 1;
+    const countProjects = this.getRandom(0, 4);
+    const webProjects = this.getRandom(0, countProjects);
     const projects = [];
     for (let i = 0; i < webProjects; i++) {
       projects.push(new WebProject(this.getRandom(1, 3)));
@@ -22,7 +19,6 @@ class IncomingData {
     for (let i = 0; i < countProjects - webProjects; i++) {
       projects.push(new MobileProject(this.getRandom(1, 3)));
     }
-    this.counter += 2;
     return projects;
   }
   transferProjects() {
@@ -35,7 +31,6 @@ class IncomingData {
   }
   statistic() {
     console.log('Статистика:');
-    console.log(`Всего проектов: ${this.counter}`);
     console.log(`Выполненных проектов: ${this.manager.doneProjects.length}`);
     console.log(
       `Нанятых сотрудников: ${this.manager.statisticHiredDevelopers}`
