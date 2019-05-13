@@ -1,6 +1,5 @@
 class Developer {
-  constructor(specialization) {
-    this.specialization = specialization;
+  constructor() {
     this.skill = 0;
     this.project = null;
     this.unBusyCount = 0;

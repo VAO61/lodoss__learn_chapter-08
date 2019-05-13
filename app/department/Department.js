@@ -31,7 +31,7 @@ class Department {
   getUnBusyDeveloper() {
     const array = this.unBusyDevelopers
       .filter(developer => {
-        return developer.developerUnBusy >= 3;
+        return developer.unBusyCount >= 3;
       })
       .sort((developer1, developer2) => {
         return developer2.developerSkill - developer1.developerSkill;

@@ -29,16 +29,17 @@ class Manager {
     this.pendingProjects.forEach(project => {
       if (project instanceof WebProject) {
         this.webDept.unBusyDevelopers.push(new WebDeveloper());
+        this.statisticHiredDevelopers++;
       } else if (project instanceof MobileProject) {
         this.mobileDept.unBusyDevelopers.push(new MobileDeveloper());
+        this.statisticHiredDevelopers++;
       }
     });
 
     this.devDoneProjects.forEach(() => {
       this.testDept.unBusyDevelopers.push(new TestDeveloper());
+      this.statisticHiredDevelopers++;
     });
-    this.statisticHiredDevelopers +=
-      this.pendingProjects.length + this.devDoneProjects.length;
   }
 
   generatePendingProjects(projects) {
