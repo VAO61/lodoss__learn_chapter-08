@@ -10,7 +10,7 @@ class Department {
 
   firedDevelopers() {
     let developer = this.getUnBusyDeveloper();
-    if (developer !== undefined) {
+    if (developer) {
       this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
         return item !== developer;
       });
@@ -34,7 +34,7 @@ class Department {
         return developer.unBusyCount >= 3;
       })
       .sort((developer1, developer2) => {
-        return developer2.developerSkill - developer1.developerSkill;
+        return developer2.skill - developer1.skill;
       });
 
     return array.pop();
