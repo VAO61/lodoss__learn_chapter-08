@@ -41,6 +41,9 @@ class Department {
   }
 
   workF1() {
+    // распределяет по проектам (мин. 1 на проект)
+    // TODO: while!
+
     this.projects.forEach(project => {
       const developer = this.unBusyDevelopers.pop();
 
@@ -62,6 +65,7 @@ class Department {
   }
 
   workF2() {
+    // Приступить к работе разработчикам в отделе
     this.developers.forEach(function(developer) {
       developer.work();
     });
@@ -72,6 +76,7 @@ class Department {
   }
 
   workF3() {
+    // Собирает готовые проекты
     this.projects
       .filter(
         project => project.progress >= project.difficulty
