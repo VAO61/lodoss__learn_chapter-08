@@ -1,4 +1,5 @@
 const Department = require('./Department.js');
+const MobileDeveloper = require('../developers/MobileDeveloper.js');
 
 class MobileDept extends Department {
   constructor() {
@@ -14,6 +15,10 @@ class MobileDept extends Department {
       sum += this.projects[i].difficulty;
     }
     return this.unBusyDevelopers.length - sum;
+  }
+
+  hiredDevelopers() {
+    this.unBusyDevelopers.push(new MobileDeveloper());
   }
 
   work() {

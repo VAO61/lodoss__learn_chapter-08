@@ -28,16 +28,16 @@ class Manager {
     // Найм сотрудников. Минимум один разработчик на один проект
     this.pendingProjects.forEach(project => {
       if (project instanceof WebProject) {
-        this.webDept.unBusyDevelopers.push(new WebDeveloper());
+        this.webDept.hiredDevelopers();
         this.statisticHiredDevelopers++;
       } else if (project instanceof MobileProject) {
-        this.mobileDept.unBusyDevelopers.push(new MobileDeveloper());
+        this.mobileDept.hiredDevelopers();
         this.statisticHiredDevelopers++;
       }
     });
 
     this.devDoneProjects.forEach(() => {
-      this.testDept.unBusyDevelopers.push(new TestDeveloper());
+      this.testDept.hiredDevelopers();
       this.statisticHiredDevelopers++;
     });
   }

@@ -18,6 +18,11 @@ class Department {
     }
   }
 
+  hiredDevelopers() {
+    // Генерация исключения
+    throw new Error('Метод hiredDevelopers не переопределен');
+  }
+
   getSafeLoad() {
     return this.unBusyDevelopers.length - this.projects.length;
   }
