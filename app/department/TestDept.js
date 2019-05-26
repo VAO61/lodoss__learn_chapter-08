@@ -7,7 +7,7 @@ class TestDept extends Department {
   }
 
   hiredDevelopers() {
-    this.unBusyDevelopers.push(new TestDeveloper());
+    this.developers.push(new TestDeveloper());
   }
 }
 

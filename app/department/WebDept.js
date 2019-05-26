@@ -7,7 +7,7 @@ class WebDept extends Department {
   }
 
   hiredDevelopers() {
-    this.unBusyDevelopers.push(new WebDeveloper());
+    this.developers.push(new WebDeveloper());
   }
 }
 

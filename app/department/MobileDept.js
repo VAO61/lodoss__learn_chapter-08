@@ -14,34 +14,28 @@ class MobileDept extends Department {
     for (let i = 0; i < this.projects.length; i++) {
       sum += this.projects[i].difficulty;
     }
-    return this.unBusyDevelopers.length - sum;
+    return this.getUnBusyDevelopers().length - sum;
   }
 
   hiredDevelopers() {
-    this.unBusyDevelopers.push(new MobileDeveloper());
+    this.developers.push(new MobileDeveloper());
   }
 
   work() {
     this.workF1();
 
     // Дополнительные разработчики на проект (этот кусок кода специфичен для отдела мобильной разработки)
-    this.unBusyDevelopers.forEach((developer, index) => {
+    this.getUnBusyDevelopers().forEach(developer => {
       this.projects.forEach(project => {
         const count = this.developers.filter(function(item) {
           return item.project === project;
         }).length;
 
         if (project.difficulty > count) {
-          developer.project = project;
-          developer.developerUnBusy = 0;
-          this.developers.push(developer);
-          this.unBusyDevelopers[index] = null;
+          developer.startProject(project);
         }
       });
     });
-    this.unBusyDevelopers = this.unBusyDevelopers.filter(
-      developer => developer !== null
-    );
 
     this.workF2();
     this.workF3();

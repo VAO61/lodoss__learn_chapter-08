@@ -3,14 +3,14 @@ class Developer {
     this.skill = 0;
     this.project = null;
     this.unBusyCount = 0;
-    // this.webDeveloper = new WebDeveloper();
-    // this.mobileDeveloper = new MobileDeveloper();
-    // this.testDeveloper = new TestDept();
+  }
+
+  // ты занят?
+  isBusy() {
+    return !!this.project;
   }
 
   startProject(project) {
-    // TODO: должно быть свойством (одним если они взаимозаменяемы) класса Developer
-    // UPD: это разные сущности
     // Назначаем проект разработчику
     this.project = project;
     // Обнуляем счетчик дней простоя разработчика

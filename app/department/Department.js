@@ -3,15 +3,21 @@ class Department {
     // TODO: требуется рефакторинг массивов, должно остаться два
     this.projects = [];
     this.developers = [];
-    this.unBusyDevelopers = [];
     this.doneProjects = [];
     this.statisticFiredDevelopers = 0;
+  }
+
+  /**
+   * Возвращает массив незаняты разработчиков
+   */
+  getUnBusyDevelopers() {
+    return this.developers.filter(developer => !developer.isBusy());
   }
 
   firedDevelopers() {
     let developer = this.getUnBusyDeveloper();
     if (developer) {
-      this.unBusyDevelopers = this.unBusyDevelopers.filter(item => {
+      this.developers = this.developers.filter(item => {
         return item !== developer;
       });
       this.statisticFiredDevelopers++;
@@ -24,7 +30,7 @@ class Department {
   }
 
   getSafeLoad() {
-    return this.unBusyDevelopers.length - this.projects.length;
+    return this.getUnBusyDevelopers().length - this.projects.length;
   }
 
   takeDevDonProjectsTransfer() {
@@ -34,13 +40,9 @@ class Department {
   }
 
   getUnBusyDeveloper() {
-    const array = this.unBusyDevelopers
-      .filter(developer => {
-        return developer.unBusyCount >= 3;
-      })
-      .sort((developer1, developer2) => {
-        return developer2.skill - developer1.skill;
-      });
+    const array = this.getUnBusyDevelopers().sort(
+      (developer1, developer2) => developer2.skill - developer1.skill
+    );
 
     return array.pop();
   }
@@ -49,8 +51,9 @@ class Department {
     // распределяет по проектам (мин. 1 на проект)
     // TODO: while!
 
+    const unBusyDevelopers = this.getUnBusyDevelopers();
     this.projects.forEach(project => {
-      const developer = this.unBusyDevelopers.pop();
+      const developer = unBusyDevelopers.pop();
 
       // Если есть незанятые
       if (!developer) {
@@ -59,23 +62,12 @@ class Department {
 
       // Передаем проект разработчику
       developer.startProject(project);
-
-      // Убираем разработчика из массива незанятых
-      this.unBusyDevelopers = this.unBusyDevelopers.filter(
-        d => d !== developer
-      );
-      // Переводим разработчика из массива незанятых в массив занятых
-      this.developers.push(developer);
     });
   }
 
   workF2() {
     // Приступить к работе разработчикам в отделе
     this.developers.forEach(function(developer) {
-      developer.work();
-    });
-
-    this.unBusyDevelopers.forEach(function(developer) {
       developer.work();
     });
   }
@@ -96,10 +88,6 @@ class Department {
         developers.forEach(developer => {
           // Говорим разработичку остановить работу над проектом (об`Null`яем проект и повышаем skill на 1)
           developer.stopProject();
-          // Убираем разаработчика из массива занятых
-          this.developers = this.developers.filter(d => d !== developer);
-          // Переводим разработчика в массив незанятых
-          this.unBusyDevelopers.push(developer);
         });
 
         // Удаляем проект из списка проектов "в работе"
