@@ -23,6 +23,7 @@ class IncomingData {
   }
   transferProjects() {
     this.manager.addProjects(this.generateProjects());
+    this.manager.work();
   }
   start() {
     for (let i = 0; i < this.days; i++) {

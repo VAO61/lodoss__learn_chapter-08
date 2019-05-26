@@ -1,6 +1,5 @@
 class Department {
   constructor() {
-    // TODO: требуется рефакторинг массивов, должно остаться два
     this.projects = [];
     this.developers = [];
     this.doneProjects = [];
@@ -12,6 +11,15 @@ class Department {
    */
   getUnBusyDevelopers() {
     return this.developers.filter(developer => !developer.isBusy());
+  }
+
+  /**
+   * Возвращает список проектов, над которыми работа еще не начата
+   */
+  getNotStartProjects() {
+    return this.projects.filter(project => {
+      return !this.developers.some(developer => developer.project === project);
+    });
   }
 
   firedDevelopers() {
@@ -47,29 +55,24 @@ class Department {
     return array.pop();
   }
 
+  /**
+   * Назначает минимум одного разработчика на один проект
+   */
   workF1() {
-    // распределяет по проектам (мин. 1 на проект)
-    // TODO: while!
-
     const unBusyDevelopers = this.getUnBusyDevelopers();
-    this.projects.forEach(project => {
+    const notStartProjects = this.getNotStartProjects();
+    while (notStartProjects.length && unBusyDevelopers.length) {
+      const project = notStartProjects.pop();
       const developer = unBusyDevelopers.pop();
-
-      // Если есть незанятые
-      if (!developer) {
-        return;
-      }
-
-      // Передаем проект разработчику
       developer.startProject(project);
-    });
+    }
   }
 
+  /**
+   * Приказывает каждому разработчику работать
+   */
   workF2() {
-    // Приступить к работе разработчикам в отделе
-    this.developers.forEach(function(developer) {
-      developer.work();
-    });
+    this.developers.forEach(developer => developer.work());
   }
 
   workF3() {

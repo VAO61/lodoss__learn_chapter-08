@@ -19,8 +19,6 @@ class Manager {
     this.pendingProjects = []; // ожидающие принятия проекты
     this.devDoneProjects = [];
     this.doneProjects = [];
-    // TODO: использовать первичные и вторичные данные, и фильтр
-    // this.firedDevelopers = [];
     this.statisticHiredDevelopers = 0;
   }
 
@@ -49,7 +47,9 @@ class Manager {
 
   addProjects(projects) {
     this.generatePendingProjects(projects);
+  }
 
+  work() {
     // Выполняется функция найма сотрудников
     this.hiredDevelopers();
 
