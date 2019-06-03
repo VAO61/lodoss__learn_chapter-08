@@ -22,7 +22,7 @@ class MobileDept extends Department {
   }
 
   work() {
-    this.workF1();
+    this.workAssign();
 
     // Дополнительные разработчики на проект (этот кусок кода специфичен для отдела мобильной разработки)
     this.getUnBusyDevelopers().forEach(developer => {
@@ -37,8 +37,8 @@ class MobileDept extends Department {
       });
     });
 
-    this.workF2();
-    this.workF3();
+    this.workStart();
+    this.workEnd();
   }
 }
 

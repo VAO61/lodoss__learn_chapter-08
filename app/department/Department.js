@@ -58,7 +58,7 @@ class Department {
   /**
    * Назначает минимум одного разработчика на один проект
    */
-  workF1() {
+  workAssign() {
     const unBusyDevelopers = this.getUnBusyDevelopers();
     const notStartProjects = this.getNotStartProjects();
     while (notStartProjects.length && unBusyDevelopers.length) {
@@ -71,11 +71,11 @@ class Department {
   /**
    * Приказывает каждому разработчику работать
    */
-  workF2() {
+  workStart() {
     this.developers.forEach(developer => developer.work());
   }
 
-  workF3() {
+  workEnd() {
     // Собирает готовые проекты
     this.projects
       .filter(
@@ -101,9 +101,9 @@ class Department {
   }
 
   work() {
-    this.workF1();
-    this.workF2();
-    this.workF3();
+    this.workAssign();
+    this.workStart();
+    this.workEnd();
   }
 }
 
