@@ -19,6 +19,7 @@ class MobileDept extends Department {
 
   hiredDevelopers() {
     this.developers.push(new MobileDeveloper());
+    // this.developers.push(DeveloperFactory.createMobileDeveloper());
   }
 
   work() {

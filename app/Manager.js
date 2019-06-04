@@ -7,9 +7,9 @@ const MobileProject = require('./projects/MobileProject.js');
 // Не используются пока
 // const TestProject = require('./projects/TestProject.js');
 
-const WebDeveloper = require('./developers/WebDeveloper.js');
-const MobileDeveloper = require('./developers/MobileDeveloper.js');
-const TestDeveloper = require('./developers/TestDeveloper.js');
+// const WebDeveloper = require('./developers/WebDeveloper.js');
+// const MobileDeveloper = require('./developers/MobileDeveloper.js');
+// const TestDeveloper = require('./developers/TestDeveloper.js');
 
 class Manager {
   constructor() {
