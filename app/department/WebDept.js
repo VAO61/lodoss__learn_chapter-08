@@ -1,5 +1,5 @@
+const DeveloperFactory = require('../_factories/DeveloperFactory.js');
 const Department = require('./Department.js');
-const WebDeveloper = require('../developers/WebDeveloper.js');
 
 class WebDept extends Department {
   constructor() {
@@ -7,7 +7,7 @@ class WebDept extends Department {
   }
 
   hiredDevelopers() {
-    this.developers.push(new WebDeveloper());
+    this.developers.push(DeveloperFactory.createWebDeveloper());
   }
 }
 
