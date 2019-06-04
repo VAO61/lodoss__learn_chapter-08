@@ -1,16 +1,10 @@
-const ProjectFactory = require('./Factory.js');
-// const WebProject = require('./projects/WebProject.js');
-// const MobileProject = require('./projects/MobileProject.js');
+const ProjectFactory = require('./_factories/ProjectFactory.js');
 
 class IncomingData {
   constructor(manager, days) {
     this.manager = manager;
     this.days = days;
   }
-
-  // getRandom(min, max) {
-  //   return Math.floor(Math.random() * (max - min + 1)) + min;
-  // }
 
   generateProjects() {
     const countProjects = ProjectFactory.getRandom(0, 4);
