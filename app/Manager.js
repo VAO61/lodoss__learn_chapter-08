@@ -1,6 +1,4 @@
-const WebDept = require('./department/WebDept.js');
-const MobileDept = require('./department/MobileDept.js');
-const TestDept = require('./department/TestDept.js');
+const DepartmentFactory = require('./_factories/DepartmentFactory.js');
 
 const WebProject = require('./projects/WebProject.js');
 const MobileProject = require('./projects/MobileProject.js');
@@ -13,9 +11,9 @@ const MobileProject = require('./projects/MobileProject.js');
 
 class Manager {
   constructor() {
-    this.webDept = new WebDept();
-    this.mobileDept = new MobileDept();
-    this.testDept = new TestDept();
+    this.webDept = DepartmentFactory.createWebDept();
+    this.mobileDept = DepartmentFactory.createMobileDept();
+    this.testDept = DepartmentFactory.createTestDept();
     this.pendingProjects = []; // ожидающие принятия проекты
     this.devDoneProjects = [];
     this.doneProjects = [];
