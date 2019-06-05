@@ -1,6 +1,6 @@
 # OOP | Patterns | Unit tests
 
-<!-- ![](https://pbs.twimg.com/media/D5kWTVLWAAEscsj.jpg) -->
+![](https://pbs.twimg.com/media/D5kWTVLWAAEscsj.jpg)
 
 ## Ссылочки:
 
