@@ -67,3 +67,5 @@ console.error(
 console.table(somePerson);
 
 console.log(somePerson, ['firstName', 'middleName', 'lastName']);
+
+console.clear();
