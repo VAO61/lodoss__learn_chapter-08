@@ -33,6 +33,6 @@ it('Принимаются два числа?', () => {
   assert.equal(operations.validateNumbers(5, 5), true);
 });
 
-it('Делить на 0 нельзя', () => {
+it('Делить на 0 нельзя!', () => {
   assert.equal(operations.validateDivide(10, 0), false);
 });

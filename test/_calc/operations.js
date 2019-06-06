@@ -11,7 +11,6 @@ const validateNumbers = (x, y) => {
 const validateDivide = (x, y) => {
   // else if (x / 0) {
   if (x / y && y == 0) {
-    console.log('На ноль делить нельзя!');
     return false;
   }
 };
