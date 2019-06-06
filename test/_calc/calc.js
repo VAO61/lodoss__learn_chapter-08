@@ -27,8 +27,7 @@ rl.question('Введите первое число:', x => {
       [3] Умножение (*)
       [4] Деление (/)
 
-      Ваш выбор:
-    `,
+      Ваш выбор: `,
       choice => {
         // будет еще код
         if (!operations.validateNumbers(x, y)) {
@@ -49,26 +48,39 @@ rl.question('Введите первое число:', x => {
            */
           switch (choice) {
             case '1':
-              console.log(`Сумма ${x} и ${y} равна ${operations.add(x, y)}.`);
+              console.log(
+                `\nСумма ${x} и ${y} равна ${operations.add(x, y)}.\n`
+              );
               break;
             case '2':
               console.log(
-                `Разность ${x} и ${y} равна ${operations.substract(x, y)}.`
+                `\nРазность ${x} и ${y} равна ${operations.substract(x, y)}.\n`
               );
               break;
             case '3':
               console.log(
-                `Произведение ${x} и ${y} равно ${operations.multiply(x, y)}.`
+                `\nПроизведение ${x} и ${y} равно ${operations.multiply(
+                  x,
+                  y
+                )}.\n`
               );
               break;
             case '4':
-              console.log(
-                `Частное ${x} и ${y} равно ${operations.divide(x, y)}.`
-              );
-              break;
+              if (y == 0) {
+                console.log(
+                  '\nВам бы двойку поставить в дневник от учителя по математике. На ноль делить нельзя! Попробуйте еще.\n'
+                );
+                rl.close();
+                return false;
+              } else {
+                console.log(
+                  `\nЧастное ${x} и ${y} равно ${operations.divide(x, y)}.\n`
+                );
+                break;
+              }
             default:
               console.log(
-                `Пожалуйста, перезапустите программу и выберите число от 1 до 4`
+                `\nОперации с ключем [${choice}] не существует! Пожалуйста, перезапустите программу и выберите операцию соответствующую числам от 1 до 4\n`
               );
               break;
           }

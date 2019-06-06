@@ -32,3 +32,7 @@ it('Не доспустимо использование двух строк в�
 it('Принимаются два числа?', () => {
   assert.equal(operations.validateNumbers(5, 5), true);
 });
+
+it('Делить на 0 нельзя', () => {
+  assert.equal(operations.validateDivide(10, 0), false);
+});
