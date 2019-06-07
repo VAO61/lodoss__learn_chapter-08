@@ -22,7 +22,7 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "./app/sum.js",
+      "./app/IncomingData.js",
       "!**node_modules/**"
     ]
   }

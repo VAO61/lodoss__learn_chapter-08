@@ -37,7 +37,6 @@ class IncomingData {
         this.manager.mobileDept.statisticFiredDevelopers +
         this.manager.testDept.statisticFiredDevelopers}`
     );
-    // console.log(Factory());
   }
 }
 
