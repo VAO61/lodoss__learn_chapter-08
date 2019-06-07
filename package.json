@@ -2,12 +2,9 @@
   "name": "calc.js",
   "version": "1.0.0",
   "description": "Простой калькулятор на Node.js",
-  "main": "8.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "mocha"
+    "start": "node ./8.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,6 +17,13 @@
   },
   "homepage": "https://github.com/VAO61/lodoss__learn_chapter-08#readme",
   "devDependencies": {
-    "mocha": "^6.1.4"
+    "jest": "^24.8.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./app/sum.js",
+      "!**node_modules/**"
+    ]
   }
 }
