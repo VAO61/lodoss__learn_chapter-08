@@ -34,22 +34,4 @@ describe('class IncomingData', () => {
       expect(app.start).toBeInstanceOf(Function);
     });
   });
-
-  // describe('receive random numbers', () => {
-  //   test('should be 0 or 1 or 2 or 3 or 4', () => {
-  //     const app = new IncomingData(manager, 1);
-  //     console.log(typeof app);
-  //     console.log(typeof app.projects);
-  //     // console.log(`\n>>>>>>>>>>>>>  ${app}  <<<<<<<<<<<</n`);
-
-  //     // В received(toBe) указывать несколько значений, видимо, нельзя поэтому:
-  //     expect(
-  //       app.countProjects === 0 ||
-  //         app.countProjects === 1 ||
-  //         app.countProjects === 2 ||
-  //         app.countProjects === 3 ||
-  //         app.countProjects === 4
-  //     ).toBe(true);
-  //   });
-  // });
 });
