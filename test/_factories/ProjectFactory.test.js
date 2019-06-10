@@ -1,6 +1,6 @@
 const ProjectFactory = require('../../app/_factories/ProjectFactory.js');
 
-describe('receive random numbers', () => {
+describe('method getRandom, receive random number', () => {
   test('should be 0 or 1 or 2 or 3 or 4', () => {
     const factory = ProjectFactory;
 
