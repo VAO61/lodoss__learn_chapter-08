@@ -24,6 +24,8 @@ class Department {
 
   firedDevelopers() {
     let developer = this.getUnBusyDeveloper();
+    console.log(developer);
+
     if (developer) {
       this.developers = this.developers.filter(item => {
         return item !== developer;
@@ -104,6 +106,7 @@ class Department {
     this.workAssign();
     this.workStart();
     this.workEnd();
+    // console.log(this.statisticFiredDevelopers);
   }
 }
 
