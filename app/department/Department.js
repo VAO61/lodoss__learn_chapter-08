@@ -24,7 +24,6 @@ class Department {
 
   firedDevelopers() {
     let developer = this.getUnBusyDeveloper();
-    console.log(developer);
 
     if (developer) {
       this.developers = this.developers.filter(item => {
