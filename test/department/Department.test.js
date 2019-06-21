@@ -1,10 +1,10 @@
-const Department = require('../app/department/Department');
-const Developer = require('../app/developers/Developer');
-const Project = require('../app/projects/Project');
+const Department = require('../../app/department/Department');
+const Developer = require('../../app/developers/Developer');
+const Project = require('../../app/projects/Project');
 
 describe('class Department', () => {
   describe('method getUnBusyDevelopers', () => {
-    test('должен вернуть массив с двумя элементами', () => {
+    test('should receive array with two elements', () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
@@ -19,7 +19,7 @@ describe('class Department', () => {
       expect(unBusyDevelopers).toEqual([developer1, developer3]);
     });
 
-    test('должен вернуть пустой массив', () => {
+    test('should receive empty array', () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
@@ -37,7 +37,7 @@ describe('class Department', () => {
   });
 
   describe('method getUnBusyDeveloper', () => {
-    test('должен вернуть элемент', () => {
+    test('should receive the most unskill unbusy developer (developer1)', () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
@@ -54,7 +54,7 @@ describe('class Department', () => {
       expect(unBusyDeveloper).toBe(developer1);
     });
 
-    test('должен вернуть undefined', () => {
+    test('should receive undefined', () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
@@ -72,7 +72,7 @@ describe('class Department', () => {
   });
 
   describe('method firedDevelopers', () => {
-    test('должен уволить developer1', () => {
+    test('should fire the most unskill unbusy developer (developer1)', () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
@@ -90,7 +90,7 @@ describe('class Department', () => {
       expect(department.statisticFiredDevelopers).toBe(1);
     });
 
-    test('не должен увольнять', () => {
+    test("shouldn't fire anyone", () => {
       const department = new Department();
       const project = new Project();
       const developer1 = new Developer();
