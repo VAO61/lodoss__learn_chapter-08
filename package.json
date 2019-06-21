@@ -1,0 +1,28 @@
+{
+  "name": "calc.js",
+  "version": "1.0.0",
+  "description": "Простой калькулятор на Node.js",
+  "scripts": {
+    "start": "node ./8.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VAO61/lodoss__learn_chapter-08.git"
+  },
+  "author": "VAO61",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VAO61/lodoss__learn_chapter-08/issues"
+  },
+  "homepage": "https://github.com/VAO61/lodoss__learn_chapter-08#readme",
+  "devDependencies": {
+    "jest": "^24.8.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./app/**/*.js"
+    ]
+  }
+}

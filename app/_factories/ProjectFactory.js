@@ -15,6 +15,4 @@ const ProjectFactory = {
   }
 };
 
-// console.log('\n__Проверка подключения. Всё в порядке!__\n');
-
 module.exports = ProjectFactory;

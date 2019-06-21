@@ -1,8 +1,8 @@
 const Project = require('./Project.js');
 
 class TestProject extends Project {
-  constructor() {
-    super();
+  constructor(difficulty) {
+    super(difficulty);
   }
 }
 
